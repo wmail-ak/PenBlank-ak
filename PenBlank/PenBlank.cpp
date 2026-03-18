@@ -62,7 +62,7 @@ static bool SetDiskOffline(const std::wstring& devicePath, bool offline) {
 		PrintError(std::format(L"DeviceIoControl failed. Error: {}",  GetLastError()));
 		return false;
 	}
-	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (offline ? "offline" : "online")));
+	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (offline ? L"offline" : L"online")));
 	return true;
 }
 
@@ -103,7 +103,7 @@ static bool SetDiskReadonly(const std::wstring& devicePath, bool readonly) {
 		PrintError(std::format(L"DeviceIoControl failed. Error: {}", GetLastError()));
 		return false;
 	}
-	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (readonly ? "+readonly" : "-readonly")));
+	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (readonly ? L"+readonly" : L"-readonly")));
 	return true;
 }
 
@@ -170,7 +170,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 	if (confirmDestructivePath(drivePath)) {
 		PrintSentence(L"Written: 0 MiB, [          ] 0%");
 
-		const DWORD BUF_SIZE = 1 << 20; // 128 MiB
+		const DWORD BUF_SIZE = 1 << 24; // 128 MiB
 		std::vector<char> buffer(BUF_SIZE);
 		LARGE_INTEGER pos{};
 		DWORD written = 0;
@@ -181,7 +181,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 			std::streamsize bytesRead = iso_sm.gcount();
 			if (bytesRead <= 0) break;
 
-			if (!WriteFile(hDrive, buffer.data(), (DWORD)iso_sm.gcount(), &written, NULL))break;
+			if (!WriteFile(hDrive, buffer.data(), bytesRead, &written, NULL))break;
 			if (written == 0) break;
 
 			total += written;
@@ -221,7 +221,7 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 		return;
 	}
 
-	const DWORD BUF_SIZE = 1 << 20; // 128 MiB
+	const DWORD BUF_SIZE = 1 << 24; // 128 MiB
 	std::vector<char> bufIso(BUF_SIZE), bufUsb(BUF_SIZE);
 	DWORD readUsb = 0;
 	size_t total = 0;
@@ -264,6 +264,12 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 
 int main() {
 	std::wstring isoPath;
+
+	PrintSentence(L"Welcome to PenBlank!");
+	PrintSentence(L"Your trusted tool for safe ISO writing, fast image handling, and reliable data verification.");
+	PrintSentence(L"Copyright Arsenii K. decode@tutanota.de, 2026");
+	PrintSentence(L"");
+
 	PrintSentence(L"Enter path to ISO:");
 	std::getline(std::wcin, isoPath);
 
@@ -289,11 +295,11 @@ int main() {
 				}
 
 				if (writeISO(iso_sm, ISOsize, drivePath)) {
-					//SetDiskReadonly(drivePath, true);
-					//SetDiskOffline(drivePath, false);
+
 
 					// Safe eject warning
-					PrintSentence(L"IMPORTANT: Safely eject and reinsert the USB drive to ensure caches are flushed.");
+					PrintSentence(L"IMPORTANT: Before continuing, please safely eject and reinsert your USB drive\r\n to ensure all caches are fully flushed.");
+					PrintSentence(L"NOTE: If ejecting property is not available, it mean that PenBlank was place the drive device into an offline state. \r\nIn that case, simply reinsert the device without concern.");
 					PrintSentence(L"Press any key to SKIP waiting, otherwise comparison will start in 700 seconds...");
 
 					for (uint16_t i = 700; i > 0; --i) {
@@ -326,7 +332,7 @@ int main() {
 
 	PrintSentence(L"Press any key to exit: ");
 	wchar_t x = _getch();
-	PrintSentence(std::format(L"Continue. Key pressed: {}", (std::isprint(x) ? std::wstring(1, x) : L"non-printable(" + std::to_wstring(x) + L")")));
+	PrintSentence(std::format(L"Key pressed: {}", (std::isprint(x) ? std::wstring(1, x) : L"non-printable(" + std::to_wstring(x) + L")")));
 
 	return 0;
 }
