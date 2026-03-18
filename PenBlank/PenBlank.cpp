@@ -299,7 +299,7 @@ int main() {
 
 					// Safe eject warning
 					PrintSentence(L"IMPORTANT: Before continuing, please safely eject and reinsert your USB drive\r\n to ensure all caches are fully flushed.");
-					PrintSentence(L"NOTE: If the eject option is not available, it means PenBlank has placed the drive into an offline state.\r\n In that case, simply reinsert the device — no additional action is required.");
+					PrintSentence(L"NOTE: If the eject option is not available, it means PenBlank has placed the drive into an offline state.\r\n In that case, simply reinsert the device - no additional action is required.");
 					PrintSentence(L"Press any key to SKIP waiting, otherwise comparison will start in 700 seconds...");
 
 					for (uint16_t i = 700; i > 0; --i) {
@@ -313,6 +313,7 @@ int main() {
 						}
 					}
 					PrintSentence(std::format(L"Continue."));
+					Sleep(5500);
 					compareISOWithDrive(iso_sm, ISOsize, drivePath);
 
 				}
