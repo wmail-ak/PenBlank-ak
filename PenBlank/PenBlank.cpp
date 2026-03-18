@@ -176,7 +176,11 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 		DWORD written = 0;
 
 		auto start = GetTickCount64();
-		while (iso_sm.read(buffer.data(), BUF_SIZE) || iso_sm.gcount() > 0) {
+		while (true) {
+			iso_sm.read(buffer.data(), BUF_SIZE);
+			std::streamsize bytesRead = iso_sm.gcount();
+			if (bytesRead <= 0) break;
+
 			if (!WriteFile(hDrive, buffer.data(), (DWORD)iso_sm.gcount(), &written, NULL))break;
 			if (written == 0) break;
 
@@ -188,7 +192,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 				uint8_t blocks = percent / 10; // how many '=' out of 10
 				uint8_t spaces = 10 - blocks;
 
-				PrintSentence(std::format(L"Written: {} MiB, [{}] {}%           ", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
+				PrintSentence(std::format(L"Written: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
 				start = GetTickCount64();
 			}
 		}
@@ -223,25 +227,29 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 	size_t total = 0;
 
 	auto start = GetTickCount64();
-	while (iso_sm.read(bufIso.data(), BUF_SIZE) || iso_sm.gcount() > 0) {
-		if (!ReadFile(hDrive, bufUsb.data(), (DWORD)iso_sm.gcount(), &readUsb, NULL) || readUsb != iso_sm.gcount()) {
+	while (true) {
+		iso_sm.read(bufIso.data(), BUF_SIZE);
+		std::streamsize bytesRead = iso_sm.gcount();
+		if (bytesRead <= 0) break;
+
+		if (!ReadFile(hDrive, bufUsb.data(), (DWORD)bytesRead, &readUsb, NULL) || readUsb != bytesRead) {
 			PrintError(L"Mismatch: unable to read same amount from USB.");
 			break;
 		}
 
 		if (memcmp(bufIso.data(), bufUsb.data(), readUsb) != 0) {
-			PrintError(std::format(L"ismatch detected at offset {} bytes.", total));
+			PrintError(std::format(L"Mismatch detected at offset {} bytes.", total));
 			break;
 		}
 
 		total += readUsb;
 
-		if (((GetTickCount64() - start) >= 10) || (total == ISOsize)) {
-			char percent = (char)(100 * total / ISOsize);
-			char blocks = percent / 10; // how many '=' out of 10
-			char spaces = 10 - blocks;
+		if (((GetTickCount64() - start) >= 100) || (total == ISOsize)) {
+			uint8_t percent = (uint8_t)(100 * total / ISOsize);
+			uint8_t blocks = percent / 10; // how many '=' out of 10
+			uint8_t spaces = 10 - blocks;
 
-			PrintSentence(std::format(L"Compared: {} MiB, [{}] {}%           ", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
+			PrintSentence(std::format(L"Compared: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
 			start = GetTickCount64();
 		}
 	}
@@ -256,7 +264,7 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 
 int main() {
 	std::wstring isoPath;
-	PrintSentence(std::format(L"Enter path to ISO:"));
+	PrintSentence(L"Enter path to ISO:");
 	std::getline(std::wcin, isoPath);
 
 	try {
@@ -266,8 +274,9 @@ int main() {
 		if (iso_sm && iso_sm.is_open()) {
 			size_t ISOsize = std::filesystem::file_size(isoPath);
 			listDrives();
-			PrintSentence(std::format(L"Select drive number: "));
-			short driveNum;
+			PrintSentence(L"Select drive number: ");
+			
+			uint8_t driveNum;
 			std::cin >> driveNum;
 
 			std::wstring drivePath = L"\\\\.\\PhysicalDrive" + std::to_wstring(driveNum);
@@ -275,7 +284,7 @@ int main() {
 			if (SetDiskOffline(drivePath, true) && SetDiskReadonly(drivePath, false)) {
 
 				if (!confirmDestructive()) {
-					PrintSentence(std::format(L"Operation cancelled."));
+					PrintSentence(L"Operation cancelled.");
 					return 0;
 				}
 
@@ -284,17 +293,16 @@ int main() {
 					//SetDiskOffline(drivePath, false);
 
 					// Safe eject warning
-					PrintSentence(std::format(L"IMPORTANT: Safely eject and reinsert the USB drive to ensure caches are flushed."));
-					PrintSentence(std::format(L"Press any key to SKIP waiting, otherwise comparison will start in 700 seconds..."));
+					PrintSentence(L"IMPORTANT: Safely eject and reinsert the USB drive to ensure caches are flushed.");
+					PrintSentence(L"Press any key to SKIP waiting, otherwise comparison will start in 700 seconds...");
 
-					for (short i = 700; i > 0; --i) {
+					for (uint16_t i = 700; i > 0; --i) {
 						PrintSentence(std::format(L"Starting comparison in {} seconds...    ", i));
 						Sleep(1000);
 						if (_kbhit()) {
 							wchar_t x = _getch();
 							PrintSentence(std::format(L"Continue. Key pressed: {}", (std::isprint(x) ? std::wstring(1, x) : L"non-printable(" + std::to_wstring(x) + L")")));
 							PrintSentence(std::format(L"User skipped wait."));
-
 							break;
 						}
 					}
@@ -303,20 +311,20 @@ int main() {
 
 				}
 				else {
-					PrintError(std::format(L"Something gone wronge at writeISO task"));
+					PrintError(L"Something gone wronge at writeISO task");
 				}
 				SetDiskOffline(drivePath, false);
 			}
 		}
 		else {
-			PrintError(std::format(L"Error opening ISO."));
+			PrintError(L"Error opening ISO.");
 		}
 	}
 	catch (...) {
-		PrintError(std::format(L"Something unpredictable happened"));
+		PrintError(L"Something unpredictable happened");
 	}
 
-	PrintSentence(std::format(L"Press any key to exit: "));
+	PrintSentence(L"Press any key to exit: ");
 	wchar_t x = _getch();
 	PrintSentence(std::format(L"Continue. Key pressed: {}", (std::isprint(x) ? std::wstring(1, x) : L"non-printable(" + std::to_wstring(x) + L")")));
 
