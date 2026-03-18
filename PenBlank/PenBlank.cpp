@@ -62,7 +62,7 @@ static bool SetDiskOffline(const std::wstring& devicePath, bool offline) {
 		PrintError(std::format(L"DeviceIoControl failed. Error: {}",  GetLastError()));
 		return false;
 	}
-	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (offline ? L"offline" : L"online")));
+	PrintSentence(std::format(L"Disk {} set {} successfully.", devicePath, (offline ? L"@offline" : L"@online")));
 	return true;
 }
 
@@ -170,7 +170,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 	if (confirmDestructivePath(drivePath)) {
 		PrintSentence(L"Written: 0 MiB, [          ] 0%");
 
-		const DWORD BUF_SIZE = 1 << 24; // 128 MiB
+		const DWORD BUF_SIZE = 1 << 28; // 256 MiB
 		std::vector<char> buffer(BUF_SIZE);
 		LARGE_INTEGER pos{};
 		DWORD written = 0;
@@ -181,7 +181,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 			std::streamsize bytesRead = iso_sm.gcount();
 			if (bytesRead <= 0) break;
 
-			if (!WriteFile(hDrive, buffer.data(), bytesRead, &written, NULL))break;
+			if (!WriteFile(hDrive, buffer.data(), (DWORD)bytesRead, &written, NULL))break;
 			if (written == 0) break;
 
 			total += written;
@@ -192,7 +192,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 				uint8_t blocks = percent / 10; // how many '=' out of 10
 				uint8_t spaces = 10 - blocks;
 
-				PrintSentence(std::format(L"Written: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
+				PrintSentence(std::format(L"Written: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '+') + std::wstring(spaces, '.'), percent));
 				start = GetTickCount64();
 			}
 		}
@@ -221,7 +221,7 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 		return;
 	}
 
-	const DWORD BUF_SIZE = 1 << 24; // 128 MiB
+	const DWORD BUF_SIZE = 1 << 28; // 256 MiB
 	std::vector<char> bufIso(BUF_SIZE), bufUsb(BUF_SIZE);
 	DWORD readUsb = 0;
 	size_t total = 0;
@@ -249,7 +249,7 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 			uint8_t blocks = percent / 10; // how many '=' out of 10
 			uint8_t spaces = 10 - blocks;
 
-			PrintSentence(std::format(L"Compared: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '=') + std::wstring(spaces, ' '), percent));
+			PrintSentence(std::format(L"Compared: {} MiB, [{}] {}%", static_cast<long long>(total / ONE_MIBIBYTE_BYTES), std::wstring(blocks, '+') + std::wstring(spaces, '.'), percent));
 			start = GetTickCount64();
 		}
 	}
@@ -282,10 +282,10 @@ int main() {
 			listDrives();
 			PrintSentence(L"Select drive number: ");
 			
-			uint8_t driveNum;
-			std::cin >> driveNum;
+			wchar_t driveNum;
+			std::wcin >> driveNum;
 
-			std::wstring drivePath = L"\\\\.\\PhysicalDrive" + std::to_wstring(driveNum);
+			std::wstring drivePath = L"\\\\.\\PhysicalDrive" + std::wstring(1,driveNum);
 
 			if (SetDiskOffline(drivePath, true) && SetDiskReadonly(drivePath, false)) {
 
@@ -299,7 +299,7 @@ int main() {
 
 					// Safe eject warning
 					PrintSentence(L"IMPORTANT: Before continuing, please safely eject and reinsert your USB drive\r\n to ensure all caches are fully flushed.");
-					PrintSentence(L"NOTE: If ejecting property is not available, it mean that PenBlank was place the drive device into an offline state. \r\nIn that case, simply reinsert the device without concern.");
+					PrintSentence(L"NOTE: If the eject option is not available, it means PenBlank has placed the drive into an offline state.\r\n In that case, simply reinsert the device — no additional action is required.");
 					PrintSentence(L"Press any key to SKIP waiting, otherwise comparison will start in 700 seconds...");
 
 					for (uint16_t i = 700; i > 0; --i) {
