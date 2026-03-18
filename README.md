@@ -76,7 +76,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 \### 4. Safe Eject Reminder
 
-!\[Safe Eject Reminder](screenshots/safe-eject-reminder.png)
+![Safe Eject Reminder](screenshots/safe-eject-reminder.png)
 
 
 
