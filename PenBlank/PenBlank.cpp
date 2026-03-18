@@ -141,7 +141,7 @@ static bool confirmDestructive() {
 }
 
 static bool confirmDestructivePath(const std::wstring& isoPath) {
-	PrintSentence(std::format(L"WARNING: Handle for {} drive was opened!", isoPath));
+	PrintSentence(std::format(L"WARNING: Handle for {} drive was opened! Press any key to Continue.", isoPath));
 	for (uint16_t i = 700; i > 0; --i) {
 		PrintSentence(std::format(L"Auto cancellation in {} seconds...    ", i));
 		Sleep(1000);
