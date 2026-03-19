@@ -1,8 +1,8 @@
-\# PenBlank
+# PenBlank
 
 
 
-PenBlank is a trusted utility for \*\*safe ISO writing\*\*, \*\*fast image handling\*\*, and \*\*reliable data verification\*\* on Windows.  
+PenBlank is a trusted utility for \*\*safe ISO writing\*\*, \*\*fast image handling\*\*, and \*\*reliable data verification\*\* on Windows.
 
 It provides a careful workflow for writing ISO images to USB drives, ensuring data integrity with built-in comparison checks.
 
@@ -12,19 +12,14 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\## ✨ Features
+## ✨ Features
 
-\- List all available physical drives with size information.
-
-\- Set drives \*\*offline\*\* or toggle \*\*read-only\*\* attributes for safety.
-
-\- Confirm destructive operations with countdown-based cancellation.
-
-\- Write ISO images directly to USB drives with progress logging.
-
-\- Compare written data against the original ISO for verification.
-
-\- Safe eject and reinsertion guidance to flush caches.
+* List all available physical drives with size information.
+* Set drives \*\*offline\*\* or toggle \*\*read-only\*\* attributes for safety.
+* Confirm destructive operations with countdown-based cancellation.
+* Write ISO images directly to USB drives with progress logging.
+* Compare written data against the original ISO for verification.
+* Safe eject and reinsertion guidance to flush caches.
 
 
 
@@ -32,7 +27,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\## ⚙️ Usage
+## ⚙️ Usage
 
 1\. Run the program.
 
@@ -52,45 +47,31 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\## 📸 Screenshots
+## 📸 Screenshots
 
 
 
-\### 1. Drive Listing
+### 1\. Drive Listing
 
 !\[Drive Listing](screenshots/drive-listing.png)
 
 
 
-\### 2. ISO Writing Progress
+### 2\. ISO Writing Progress
 
 !\[ISO Writing Progress](screenshots/iso-writing-progress.png)
 
 
 
-\### 3. Comparison Verification
+### 3\. Comparison Verification
 
 !\[Comparison Verification](screenshots/comparison-verification.png)
 
 
 
-\### 4. Safe Eject Reminder
+### 4\. Safe Eject Reminder
 
-![Safe Eject Reminder](screenshots/safe-eject-reminder.png)
-
-
-
-\---
-
-
-
-\## 🔒 Safety Notes
-
-\- PenBlank places drives \*\*offline\*\* during operations to prevent accidental usage.
-
-\- Always double-check the selected drive before confirming.
-
-\- The tool requires administrator privileges to access physical drives.
+!\[Safe Eject Reminder](screenshots/safe-eject-reminder.png)
 
 
 
@@ -98,14 +79,21 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\## 📜 License
+## 🔒 Safety Notes
 
-Copyright © Arsenii K. decode@tutanota.de, 2026  
+* PenBlank places drives \*\*offline\*\* during operations to prevent accidental usage.
+* Always double-check the selected drive before confirming.
+* The tool requires administrator privileges to access physical drives.
+
+
+
+\---
+
+
+
+## 📜 License
+
+Copyright © Arsenii K. decode@tutanota.de, 2026
 
 All rights reserved.
-
-
-
-
-
 
