@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="PenBlank/PenBlank.vcxproj" />
+  <Project Path="PenBlank/PenBlank.vcxproj" Id="49350bd6-06c9-4b51-aedf-fa84b5895027" />
 </Solution>

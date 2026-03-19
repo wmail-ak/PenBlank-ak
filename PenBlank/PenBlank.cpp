@@ -281,11 +281,11 @@ int main() {
 			size_t ISOsize = std::filesystem::file_size(isoPath);
 			listDrives();
 			PrintSentence(L"Select drive number: ");
-			
+
 			wchar_t driveNum;
 			std::wcin >> driveNum;
 
-			std::wstring drivePath = L"\\\\.\\PhysicalDrive" + std::wstring(1,driveNum);
+			std::wstring drivePath = L"\\\\.\\PhysicalDrive" + std::wstring(1, driveNum);
 
 			if (SetDiskOffline(drivePath, true) && SetDiskReadonly(drivePath, false)) {
 
@@ -308,11 +308,11 @@ int main() {
 						if (_kbhit()) {
 							wchar_t x = _getch();
 							PrintSentence(std::format(L"Continue. Key pressed: {}", (std::isprint(x) ? std::wstring(1, x) : L"non-printable(" + std::to_wstring(x) + L")")));
-							PrintSentence(std::format(L"User skipped wait."));
+							PrintSentence(L"User skipped wait.");
 							break;
 						}
 					}
-					PrintSentence(std::format(L"Continue."));
+					PrintSentence(L"Continue.");
 					Sleep(5500);
 					compareISOWithDrive(iso_sm, ISOsize, drivePath);
 
@@ -320,7 +320,9 @@ int main() {
 				else {
 					PrintError(L"Something gone wronge at writeISO task");
 				}
-				SetDiskOffline(drivePath, false);
+				PrintSentence(L"Set disk state to @online? - Y/N:");
+				wchar_t s = _getch();
+				if ((s == 'Y') || (s == 'y'))SetDiskOffline(drivePath, false);
 			}
 		}
 		else {
