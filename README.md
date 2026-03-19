@@ -8,7 +8,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\---
+---
 
 
 
@@ -23,27 +23,27 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\---
+---
 
 
 
 ## ⚙️ Usage
 
-1\. Run the program.
+1. Run the program.
 
-2\. Enter the path to your ISO file.
+2. Enter the path to your ISO file.
 
-3\. Select the target physical drive.
+3. Select the target physical drive.
 
-4\. Confirm destructive operation (with countdown safety).
+4. Confirm destructive operation (with countdown safety).
 
-5\. ISO will be written with progress updates.
+5. ISO will be written with progress updates.
 
-6\. Optionally verify the written data against the ISO.
+6. Optionally verify the written data against the ISO.
 
 
 
-\---
+---
 
 
 
@@ -51,31 +51,31 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-### 1\. Drive Listing
+### 1. Drive Listing
 
-!\[Drive Listing](screenshots/drive-listing.png)
-
-
-
-### 2\. ISO Writing Progress
-
-!\[ISO Writing Progress](screenshots/iso-writing-progress.png)
+![Drive Listing](screenshots/drive-listing.png)
 
 
 
-### 3\. Comparison Verification
+### 2. ISO Writing Progress
 
-!\[Comparison Verification](screenshots/comparison-verification.png)
-
-
-
-### 4\. Safe Eject Reminder
-
-!\[Safe Eject Reminder](screenshots/safe-eject-reminder.png)
+![ISO Writing Progress](screenshots/iso-writing-progress.png)
 
 
 
-\---
+### 3. Comparison Verification
+
+![Comparison Verification](screenshots/comparison-verification.png)
+
+
+
+### 4. Safe Eject Reminder
+
+![Safe Eject Reminder](screenshots/safe-eject-reminder.png)
+
+
+
+---
 
 
 
@@ -87,7 +87,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 
 
-\---
+---
 
 
 
