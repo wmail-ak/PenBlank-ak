@@ -2,7 +2,7 @@
 
 
 
-PenBlank is a trusted utility for \*\*safe ISO writing\*\*, \*\*fast image handling\*\*, and \*\*reliable data verification\*\* on Windows.
+PenBlank is a trusted utility for **safe ISO writing**, **fast image handling**, and **reliable data verification** on Windows.
 
 It provides a careful workflow for writing ISO images to USB drives, ensuring data integrity with built-in comparison checks.
 
@@ -15,7 +15,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 ## ✨ Features
 
 * List all available physical drives with size information.
-* Set drives \*\*offline\*\* or toggle \*\*read-only\*\* attributes for safety.
+* Set drives **offline** or toggle **read-only** attributes for safety.
 * Confirm destructive operations with countdown-based cancellation.
 * Write ISO images directly to USB drives with progress logging.
 * Compare written data against the original ISO for verification.
@@ -81,7 +81,7 @@ It provides a careful workflow for writing ISO images to USB drives, ensuring da
 
 ## 🔒 Safety Notes
 
-* PenBlank places drives \*\*offline\*\* during operations to prevent accidental usage.
+* PenBlank places drives **offline** during operations to prevent accidental usage.
 * Always double-check the selected drive before confirming.
 * The tool requires administrator privileges to access physical drives.
 
