@@ -187,7 +187,7 @@ static bool writeISO(std::ifstream& iso_sm, size_t ISOsize, const std::wstring& 
 			total += written;
 
 			// log every second
-			if (((GetTickCount64() - start) >= 100) || (total == ISOsize)) {
+			if (((GetTickCount64() - start) >= 1000) || (total == ISOsize)) {
 				uint8_t percent = (uint8_t)(100 * total / ISOsize);
 				uint8_t blocks = percent / 10; // how many '=' out of 10
 				uint8_t spaces = 10 - blocks;
@@ -244,7 +244,7 @@ static void compareISOWithDrive(std::ifstream& iso_sm, size_t ISOsize, const std
 
 		total += readUsb;
 
-		if (((GetTickCount64() - start) >= 100) || (total == ISOsize)) {
+		if (((GetTickCount64() - start) >= 1000) || (total == ISOsize)) {
 			uint8_t percent = (uint8_t)(100 * total / ISOsize);
 			uint8_t blocks = percent / 10; // how many '=' out of 10
 			uint8_t spaces = 10 - blocks;
